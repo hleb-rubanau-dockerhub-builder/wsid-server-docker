@@ -1,0 +1,10 @@
+---
+version: "3"
+services:
+    webtrust:
+        image: webtrust
+        build: .
+        ports:
+            - 127.0.0.1:888:888
+        volumes:
+            - ./data/tmp:/tmp

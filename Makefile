@@ -10,3 +10,6 @@ test: image
 
 bash: image
 	docker run --rm -it --entrypoint=/bin/bash ${IMAGE_ID} 
+
+up: 
+	docker-compose up -d --build

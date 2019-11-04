@@ -13,12 +13,13 @@ RUN apt-get update && \
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-CMD ["gunicorn", "app:app"]
+CMD ["gunicorn", "wsid:app"]
 
 COPY requirements.txt /app/requirements.txt
 RUN pip3 install -r requirements.txt
 
 COPY entrypoint.sh /entrypoint.sh
 COPY keygen.py /app/keygen.py
+COPY wsid.py /app/wsid.py
 RUN chmod a+x /entrypoint.sh
 #RUN pip3 install pytest requests responses 
