@@ -6,7 +6,7 @@ image:
 	docker build -t ${IMAGE_ID} .
 
 test: image
-	docker run --rm -it ${IMAGE_ID} /bin/bash
+	docker run --rm -it ${IMAGE_ID} /bin/bash -c 'env | grep WSID'
 
 bash: image
-	docker run --rm -it --entrypoint=/bin/bash ${IMAGE_ID} /bin/bash
+	docker run --rm -it --entrypoint=/bin/bash ${IMAGE_ID} 

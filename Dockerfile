@@ -12,7 +12,7 @@ RUN apt-get update && \
 
 ENV PYTHONUNBUFFERED=1
 WORKDIR /app
-ENTRYPOINT ["/usr/bin/python3","/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 CMD ["gunicorn", "app:app"]
 
 COPY requirements.txt /app/requirements.txt

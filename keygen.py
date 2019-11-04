@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from nacl.binding import crypto_sign_SEEDBYTES
-import nacl.binding
+import nacl.bindings
 import nacl.c.crypto_box
 
 signbytes=nacl.bindings.crypto_sign_SEEDBYTES
