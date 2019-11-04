@@ -10,4 +10,8 @@ RUN apt-get update && \
             libsodium23                                 \
             python3-nacl
 
-RUN pip3 install pytest requests responses 
+WORKDIR /app
+COPY requirements.txt /app/requirements.txt
+RUN pip3 install -r requirements.txt
+
+#RUN pip3 install pytest requests responses 
