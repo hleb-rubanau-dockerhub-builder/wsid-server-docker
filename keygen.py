@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 
-from nacl.binding import crypto_sign_SEEDBYTES
-import nacl.bindings
-import nacl.c.crypto_box
+import nacl.signing
+import nacl.encoding
 
-signbytes=nacl.bindings.crypto_sign_SEEDBYTES
-encbytes=nacl.c.crypto_box.SEEDBYTES
-
-print("Signbytes=%s, encbytes=%s" % [ signbytes , encbytes ] )
+private_key = nacl.signing.SigningKey.generate()
+private_key_hex = private_key.encode(encoder=nacl.encoding.HexEncoder))
+print(private_key_hex)
