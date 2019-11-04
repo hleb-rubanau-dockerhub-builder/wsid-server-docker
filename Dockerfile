@@ -10,8 +10,15 @@ RUN apt-get update && \
             libsodium23                                 \
             python3-nacl
 
+ENV PYTHONUNBUFFERED=1
 WORKDIR /app
+ENTRYPOINT ["/usr/bin/python3","/entrypoint.py"]
+CMD ["gunicorn", "app:app"]
+
 COPY requirements.txt /app/requirements.txt
 RUN pip3 install -r requirements.txt
 
+COPY entrypoint.sh /entrypoint.sh
+COPY keygen.py /app/keygen.py
+RUN chmod a+x /entrypoint.sh
 #RUN pip3 install pytest requests responses 
