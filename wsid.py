@@ -3,6 +3,7 @@ from flask import Flask, request
 import nacl.signing 
 import nacl.public 
 import nacl.encoding 
+import os
 
 LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
 app = Flask(__name__)
@@ -26,6 +27,16 @@ class WSID:
         app.logger.info("HEXENCPUB: %s" % hexencpub)
         app.logger.info("VERIFYHASH: %s" % self.verifyhash)
         app.logger.info("ENCPUBHASH: %s" % self.encpubhash)
+
+wsid=WSID(os.getenv("WSID_PRIVATE_KEY")
+
+@app.route("/")
+def index():
+    return get_public_keys() 
+
+@app.route("/identity")
+def get_public_keys():
+    return { "verify": wsid.hexverify, "encrypt": wsid.hexencpub }
 
 if __name__ == "__main__":
     app.run()
