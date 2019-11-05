@@ -12,6 +12,8 @@ services:
     wsid2:
         image: wsid
         build: .
+        volumes:
+          - ./demo.py:/app/app.py
         environment:
           - LOG_LEVEL=DEBUG 
           - WSID_IDENTITY=http://127.0.0.1:889/manifest

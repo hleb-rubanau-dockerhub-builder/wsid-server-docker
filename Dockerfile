@@ -17,13 +17,13 @@ ENV GUNICORN_CMD_ARGS="--workers=3 --access-logfile - --error-logfile -" \
     PYTHONUNBUFFERED=1
 WORKDIR /app
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
-CMD ["gunicorn", "wsid:app"]
+CMD ["gunicorn", "app:app"]
 
 COPY requirements.txt /app/requirements.txt
 RUN pip3 install -r requirements.txt
 
 COPY entrypoint.sh /entrypoint.sh
 COPY keygen.py /app/keygen.py
-COPY wsid.py /app/wsid.py
+COPY app.py /app/app.py
 RUN chmod a+x /entrypoint.sh /app/keygen.py
 #RUN pip3 install pytest requests responses 
