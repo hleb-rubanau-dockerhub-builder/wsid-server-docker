@@ -10,7 +10,10 @@ RUN apt-get update && \
             libsodium23                                 \
             python3-nacl
 
-ENV PYTHONUNBUFFERED=1
+ARG PORT=888
+EXPOSE $PORT
+ENV GUNICORN_CMD_ARGS="--bind=0.0.0.0:${PORT} --workers=3 --access-logfile - --error-logfile -" \
+    PYTHONUNBUFFERED=1
 WORKDIR /app
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
 CMD ["gunicorn", "wsid:app"]
