@@ -4,6 +4,8 @@ services:
     wsid:
         image: wsid
         build: .
+        environment:
+          - LOG_LEVEL=DEBUG
         ports:
             - 127.0.0.1:888:888
         volumes:

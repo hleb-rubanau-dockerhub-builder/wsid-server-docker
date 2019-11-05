@@ -27,6 +27,12 @@ class WSID:
         sigbytes=self.signing_key.verify_key.encode(hexencoder) 
         app.logger.info("HASH blake2b: %s" % nacl.hash.blake2b( sigbytes, digest_size=4 ) )
     
+    def sign(self, message):
+        signed = self.signing_key.sign(message)
+        return { 
+                 "msg": signed.message.decode(),
+                 "sig": nacl.encoding.HexEncoder.encode(signed.signature).decode()
+                }
 
 wsid=WSID(os.getenv("WSID_PRIVATE_KEY"))
 
@@ -37,6 +43,13 @@ def index():
 @app.route("/manifest")
 def get_public_keys():
     return wsid.manifest
+
+@app.route("/sign", methods=["POST"])
+def sign_data():
+    # todo: inject ttl, expiration -- maybe envelope?
+    result = wsid.sign( request.get_data() )
+    app.logger.debug("RESULT=%s" % result)
+    return result
 
 if __name__ == "__main__":
     app.run()
