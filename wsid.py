@@ -34,8 +34,6 @@ class WSID:
         #sigbytes=self.signing_key.verify_key.encode(hexencoder) 
         #app.logger.info("HASH blake2b: %s" % nacl.hash.blake2b( sigbytes, digest_size=4 ) )
    
-    def __is_b64_compat__(self,msg):
- 
     def sign(self, message):
         
         message = message.decode() if isinstance(message,bytes) else message
