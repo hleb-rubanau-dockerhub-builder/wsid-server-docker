@@ -1,7 +1,7 @@
 ---
 version: "3"
 services:
-    wsid1:
+    wsid:
         image: wsid
         build: .
         environment:
@@ -9,7 +9,7 @@ services:
           - WSID_IDENTITY=http://127.0.0.1:888/manifest
           - GUNICORN_PORT=888
         network_mode: host
-    wsid2:
+    validator:
         image: wsid
         build: .
         volumes:
