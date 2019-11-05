@@ -74,7 +74,6 @@ def get_public_keys():
 
 @app.route("/sign", methods=["POST"])
 def sign_data():
-    # todo: inject ttl, expiration -- maybe envelope?
     payload = request.get_data()
     if not is_like_b64(payload.decode()):
         payload = nacl.encoding.Base64Encoder.encode(payload)
