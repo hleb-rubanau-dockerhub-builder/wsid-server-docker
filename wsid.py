@@ -9,18 +9,20 @@ LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
 app = Flask(__name__)
 app.logger.setLevel(LOG_LEVEL)
 app.logger.addHandler(logging.StreamHandler())
-HexEncoder=nacl.encoding.HexEncoder
 
 class WSID:
-    def __init__(keybody):
-        self.signing_key=nacl.signing.SigningKey(keybody,HexEncoder)
-        self.encryption_key=nacl.public.PrivateKey(keybody, HexEncoder)
+    def __init__(self, keybody):
+
+        hexencoder=nacl.encoding.HexEncoder
+
+        self.signing_key=nacl.signing.SigningKey(keybody,hexencoder)
+        self.encryption_key=nacl.public.PrivateKey(keybody, hexencoder)
 
         # public keys as hex strings
-        self.hexverify  = self.signing_key.verify_key.encode(HexEncoder).decode()
-        self.hexencpub  = self.encryption_key.public_key.encode(HexEncoder).decode()
-        self.verifyhash = self.__hash__.encode(HexEncoder).decode()
-        self.encpubhash = self.__hash__.encode(HexEncoder).decode()
+        self.hexverify  = self.signing_key.verify_key.encode(hexencoder).decode()
+        self.hexencpub  = self.encryption_key.public_key.encode(hexencoder).decode()
+        self.verifyhash = str( hash( self.signing_key.verify_key ) )
+        self.encpubhash = str( hash( self.encryption_key.public_key ) )
 
 
         app.logger.info("HEXVERIFY: %s" % hexverify)
@@ -28,7 +30,7 @@ class WSID:
         app.logger.info("VERIFYHASH: %s" % self.verifyhash)
         app.logger.info("ENCPUBHASH: %s" % self.encpubhash)
 
-wsid=WSID(os.getenv("WSID_PRIVATE_KEY")
+wsid=WSID(os.getenv("WSID_PRIVATE_KEY"))
 
 @app.route("/")
 def index():
