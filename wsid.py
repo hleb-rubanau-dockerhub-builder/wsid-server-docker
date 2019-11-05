@@ -3,6 +3,7 @@ from flask import Flask, request
 import nacl.signing 
 import nacl.public 
 import nacl.encoding 
+import nacl.hash
 import os
 
 LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
@@ -18,28 +19,24 @@ class WSID:
         self.signing_key=nacl.signing.SigningKey(keybody,hexencoder)
         self.encryption_key=nacl.public.PrivateKey(keybody, hexencoder)
 
-        # public keys as hex strings
-        self.hexverify  = self.signing_key.verify_key.encode(hexencoder).decode()
-        self.hexencpub  = self.encryption_key.public_key.encode(hexencoder).decode()
-        self.verifyhash = str( hash( self.signing_key.verify_key ) )
-        self.encpubhash = str( hash( self.encryption_key.public_key ) )
+        self.manifest = {
+            "sig":   self.signing_key.verify_key.encode(hexencoder).decode(),
+            "enc":   self.encryption_key.public_key.encode(hexencoder).decode()
+        }
 
-
-        app.logger.info("HEXVERIFY: %s" % self.hexverify)
-        app.logger.info("HEXENCPUB: %s" % self.hexencpub)
-        app.logger.info("VERIFYHASH: %s" % self.verifyhash)
-        app.logger.info("ENCPUBHASH: %s" % self.encpubhash)
+        sigbytes=self.signing_key.verify_key.encode(hexencoder) 
+        app.logger.info("HASH blake2b: %s" % nacl.hash.blake2b( sigbytes, digest_size=4 ) )
+    
 
 wsid=WSID(os.getenv("WSID_PRIVATE_KEY"))
-wsid2=WSID(os.getenv("WSID_PRIVATE_KEY"))
 
 @app.route("/")
 def index():
     return get_public_keys() 
 
-@app.route("/identity")
+@app.route("/manifest")
 def get_public_keys():
-    return { "verify": wsid.hexverify, "encrypt": wsid.hexencpub }
+    return wsid.manifest
 
 if __name__ == "__main__":
     app.run()
