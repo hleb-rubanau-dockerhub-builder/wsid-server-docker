@@ -12,4 +12,4 @@ bash: image
 	docker run --rm -it --entrypoint=/bin/bash ${IMAGE_ID} 
 
 up: 
-	docker-compose up -d --build && docker-compose logs
+	docker-compose up -d --build --remove-orphans && docker-compose logs

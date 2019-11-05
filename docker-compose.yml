@@ -1,12 +1,19 @@
 ---
 version: "3"
 services:
-    wsid:
+    wsid1:
         image: wsid
         build: .
         environment:
-          - LOG_LEVEL=DEBUG
-        ports:
-            - 127.0.0.1:888:888
-        volumes:
-            - ./data/tmp:/tmp
+          - LOG_LEVEL=DEBUG 
+          - WSID_IDENTITY=http://127.0.0.1:888/manifest
+          - GUNICORN_PORT=888
+        network: host
+    wsid1:
+        image: wsid
+        build: .
+        environment:
+          - LOG_LEVEL=DEBUG 
+          - WSID_IDENTITY=http://127.0.0.1:889/manifest
+          - GUNICORN_PORT=889
+        network: host

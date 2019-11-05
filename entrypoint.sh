@@ -14,4 +14,7 @@ else
     say "WSID_PRIVATE_KEY contains predefined key, doing no regeneration"
 fi
 
+# strict binding to 127.0.0.1 
+export GUNICORN_CMD_ARGS="${GUNICORN_CMD_ARGS} --bind 127.0.0.1:$GUNICORN_PORT"
+
 exec $*

@@ -5,14 +5,18 @@ import nacl.public
 import nacl.encoding 
 import nacl.hash
 import os
+from datetime import datetime
 
 LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
 app = Flask(__name__)
 app.logger.setLevel(LOG_LEVEL)
 #app.logger.addHandler(logging.StreamHandler())
 
+def is_like_b64(msg):
+    return msg.replace('=','').isalnum()
+
 class WSID:
-    def __init__(self, keybody):
+    def __init__(self, keybody, identity, ttl=10):
 
         hexencoder=nacl.encoding.HexEncoder
 
@@ -24,17 +28,38 @@ class WSID:
             "enc":   self.encryption_key.public_key.encode(hexencoder).decode()
         }
 
-        sigbytes=self.signing_key.verify_key.encode(hexencoder) 
-        app.logger.info("HASH blake2b: %s" % nacl.hash.blake2b( sigbytes, digest_size=4 ) )
-    
+        self.identity = identity
+        self.ttl      = ttl
+        self.logger   = app.logger # <- bad
+        #sigbytes=self.signing_key.verify_key.encode(hexencoder) 
+        #app.logger.info("HASH blake2b: %s" % nacl.hash.blake2b( sigbytes, digest_size=4 ) )
+   
+    def __is_b64_compat__(self,msg):
+ 
     def sign(self, message):
-        signed = self.signing_key.sign(message)
-        return { 
-                 "msg": signed.message.decode(),
-                 "sig": nacl.encoding.HexEncoder.encode(signed.signature).decode()
-                }
+        
+        message = message.decode() if isinstance(message,bytes) else message
 
-wsid=WSID(os.getenv("WSID_PRIVATE_KEY"))
+        b64=nacl.encoding.Base64Encoder
+        hexenc=nacl.encoding.HexEncoder
+
+        now=int(datetime.utcnow().timestamp())
+        claims = {
+            'ias': self.identity,
+            'iat': now,
+            'exp': now + self.ttl
+        }
+   
+        payload=message +"." + b64.encode(json.dumps(claims)).decode()
+
+        self.logger.debug("PAYLOAD: %s" % payload)
+            
+        signed = self.signing_key.sign(payload.encode())
+        sigstring = hexenc.encode( signed.signature ).decode()
+        
+        return payload+"."+sigstring
+
+wsid=WSID(os.getenv("WSID_PRIVATE_KEY"), os.getenv("WSID_IDENTITY"))
 
 @app.route("/")
 def index():
@@ -47,9 +72,11 @@ def get_public_keys():
 @app.route("/sign", methods=["POST"])
 def sign_data():
     # todo: inject ttl, expiration -- maybe envelope?
-    result = wsid.sign( request.get_data() )
-    app.logger.debug("RESULT=%s" % result)
-    return result
+    payload = request.get_data.decode()
+    if not is_like_b64(payload):
+        payload = nacl.encoding.Base64Encoder.encode(payload).decode()
+    
+    return wsid.sign( payload )
 
 if __name__ == "__main__":
     app.run()
