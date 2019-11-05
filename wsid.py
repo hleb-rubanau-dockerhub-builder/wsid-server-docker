@@ -1,11 +1,15 @@
+import os
+import json
 import logging
+from datetime import datetime
+
 from flask import Flask, request
+
 import nacl.signing 
 import nacl.public 
 import nacl.encoding 
 import nacl.hash
-import os
-from datetime import datetime
+
 
 LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
 app = Flask(__name__)
@@ -43,12 +47,13 @@ class WSID:
 
         now=int(datetime.utcnow().timestamp())
         claims = {
-            'ias': self.identity,
+            'iss': self.identity,
             'iat': now,
             'exp': now + self.ttl
         }
-   
-        payload=message +"." + b64.encode(json.dumps(claims)).decode()
+        claims_b64 = b64.encode(json.dumps(claims).encode()).decode()
+         
+        payload=message + "." + claims_b64
 
         self.logger.debug("PAYLOAD: %s" % payload)
             
