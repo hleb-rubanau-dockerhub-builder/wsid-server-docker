@@ -7,10 +7,12 @@ LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
 app = Flask(__name__)
 app.logger.setLevel(LOG_LEVEL)
 
-@app.route("/")
+@app.route("/", methods=["POST"])
 def index():
-    data=request.get_data()
-    identity, payload, claims = wsid.validate( data )
+    payload=request.get_data()
+    app.logger.debug("DATA=%s" % [payload])
+    identity, payload, claims = wsid.validate( payload )
+    app.logger.debug("IDENTITY=%s" % [identity])
     
     return { "payload": json.loads( b64decode( payload.encode() ) ),
              "signed_by": identity,
