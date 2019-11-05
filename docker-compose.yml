@@ -1,8 +1,8 @@
 ---
 version: "3"
 services:
-    webtrust:
-        image: webtrust
+    wsid:
+        image: wsid
         build: .
         ports:
             - 127.0.0.1:888:888

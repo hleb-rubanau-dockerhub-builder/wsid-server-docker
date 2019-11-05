@@ -1,18 +1,19 @@
 import logging
 from flask import Flask, request
-from nacl.signing import SigningKey
-from nacl.public import PrivateKey
-from nacl.encoding import HexEncoder
+import nacl.signing 
+import nacl.public 
+import nacl.encoding 
 
 LOG_LEVEL = getattr(logging, os.getenv("LOG_LEVEL", "INFO").upper())
 app = Flask(__name__)
 app.logger.setLevel(LOG_LEVEL)
 app.logger.addHandler(logging.StreamHandler())
+HexEncoder=nacl.encoding.HexEncoder
 
 class WSID:
     def __init__(keybody):
-        self.signing_key=SigningKey(keybody,HexEncoder)
-        self.encryption_key=PrivateKey(keybody, HexEncoder)
+        self.signing_key=nacl.signing.SigningKey(keybody,HexEncoder)
+        self.encryption_key=nacl.public.PrivateKey(keybody, HexEncoder)
 
         # public keys as hex strings
         self.hexverify  = self.signing_key.verify_key.encode(HexEncoder).decode()

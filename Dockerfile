@@ -21,5 +21,5 @@ RUN pip3 install -r requirements.txt
 COPY entrypoint.sh /entrypoint.sh
 COPY keygen.py /app/keygen.py
 COPY wsid.py /app/wsid.py
-RUN chmod a+x /entrypoint.sh
+RUN chmod a+x /entrypoint.sh /app/keygen.py
 #RUN pip3 install pytest requests responses 
