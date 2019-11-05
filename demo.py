@@ -1,5 +1,6 @@
 import os
 import logging
+import json
 import wsid
 from flask import Flask, request
 
@@ -11,7 +12,7 @@ app.logger.setLevel(LOG_LEVEL)
 def index():
     payload=request.get_data()
     app.logger.debug("DATA=%s" % [payload])
-    identity, payload, claims = wsid.validate( payload )
+    identity, payload, claims = wsid.validate( payload, app.logger )
     app.logger.debug("IDENTITY=%s" % [identity])
     
     return { "payload": json.loads( b64decode( payload.encode() ) ),

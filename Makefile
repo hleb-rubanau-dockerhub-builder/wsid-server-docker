@@ -11,5 +11,8 @@ bash: image
 up: 
 	docker-compose up -d --build --remove-orphans && docker-compose logs
 
+down:
+	docker-compose down -v
+
 test: up
 	./test.sh
