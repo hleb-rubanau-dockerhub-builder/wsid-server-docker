@@ -9,7 +9,7 @@ services:
           - WSID_IDENTITY=http://127.0.0.1:888/manifest
           - GUNICORN_PORT=888
         network_mode: host
-    wsid1:
+    wsid2:
         image: wsid
         build: .
         environment:
