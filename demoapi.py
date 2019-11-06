@@ -38,7 +38,7 @@ def index():
 
 @app.route('/<path:subpath>', methods=["POST"])
 def fallback(subpath):
-    identity, signature_payload, signature_claims = validate_request( request )
+    identity, signature_payload, signature_claims = validate_request( request, logger=app.logger )
     app.logger.debug("IDENTITY=%s" % [identity])
     app.logger.debug("SIGNATURE=%s" % [validated_payload])
     app.logger.debug("CLAIMS=%s" % [signature_claims])
