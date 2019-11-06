@@ -30,7 +30,7 @@ def fallback(subpath):
     # convenient way to trigger usage scenarios
     if not('/unsigned/' in api_url):    
         app.logger.debug("Sending signed request to %s" % api_url)
-        result = signed_requests.process('POST', api_url, data=payload)
+        result = signed_requests.process('POST', api_url, data=payload, logger=app.logger)
     else:
         app.logger.debug("Sending unsigned request to %s" % api_url)
         result = requests.post(api_url, data=payload)
