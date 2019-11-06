@@ -15,18 +15,19 @@ app = Flask(__name__)
 app.logger.setLevel(LOG_LEVEL)
 
 POLICY={
-    '/allowed/.*$': [ '^http://127.0.0.1:887/*', ],
-    '/allowedother/.*$': ['^http://127.0.0.1:1887/*', ] # nonexisting
+    '/allowed/.*$': [ '^http://127.0.0.1:888/', ],
+    '/allowedother/.*$': ['^http://127.0.0.1:1887/', ] # nonexisting
 }
 
 def validate(path, identity):
     for pathpattern, allowed in POLICY.items():
-        app.logger.debug("CHECKING CONDITION: %s" % [pathpattern])
-        if re.compile(pathpattern).match(path):
-            app.logger.debug("PATH %s matches %s, CHECKING POLICY: %s" % (path, pathpattern, allowed))
+        app.logger.debug("CHECKING path '%s' against CONDITION: '%s'" % (path, pathpattern))
+        if re.compile(pathpattern).search(path):
+            app.logger.debug("PATH '%s' matches rule '%s'" % (path, pathpattern))
+            app.logger.debug("CHECKING identity '%s' against policy '%s'" % (identity, allowed))
             for identity_pattern in allowed:
-                app.logger.debug("CHECKING condition %s" % [identity_pattern])
-                if re.compile(identity_pattern).match(identity):
+                app.logger.debug("CHECKING identity '%s' against allowed pattern '%s'" % (identity, identity_pattern))
+                if re.compile(identity_pattern).search(identity):
                     app.logger.debug("MATCH FOUND!")
                     return True
 
