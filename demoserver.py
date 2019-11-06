@@ -4,7 +4,7 @@ import json
 from flask import Flask, request, abort
 from base64 import b64decode
 import requests 
-from wcid.requests import SignedRequests
+from wsid.requests import SignedRequests
 
 from wsid.client import WSIDClient
 
@@ -13,7 +13,7 @@ app = Flask(__name__)
 app.logger.setLevel(LOG_LEVEL)
 
 API_ENDPOINT=os.getenv("API_ENDPOINT")
-signed_requests=SignedRequests(os.getenv("WSID_ENDPOINT")
+signed_requests=SignedRequests(os.getenv("WSID_ENDPOINT"))
 
 # just an application that validates post payload
 @app.route("/", methods=["POST"])
