@@ -18,7 +18,10 @@ signed_requests=SignedRequests(os.getenv("WSID_ENDPOINT")
 # just an application that validates post payload
 @app.route("/", methods=["POST"])
 def index():
+    return fallback('/')
 
+@app.route('/<path:subpath>')
+def fallback(subpath):
     payload=request.get_data()
     path=request.path
 
