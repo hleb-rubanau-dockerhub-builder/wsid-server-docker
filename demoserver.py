@@ -28,8 +28,7 @@ def fallback(subpath):
     api_url = API_ENDPOINT+path
     app.logger.debug("API_URL=%s" % api_url )
     
-    ### DEMO: this is how we provision
-    return signed_requests.process('POST', api_url, data=payload).read()
+    return signed_requests.process('POST', api_url, data=payload).content
 
 if __name__ == "__main__":
     app.run()
