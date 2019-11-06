@@ -26,9 +26,19 @@ def fallback(subpath):
     path=request.path
 
     api_url = API_ENDPOINT+path
-    app.logger.debug("API_URL=%s" % api_url )
-    
-    return signed_requests.process('POST', api_url, data=payload).content
+
+    if not ('/unsigned/' in subpath):    
+        api.logger.debug("Sending signed request to %s" % api_url)
+        result = signed_requests.process('POST', api_url, data=payload)
+    else:
+        app.logger.debug("Sending unsigned request to %s" % api_url)
+        result = requests.post(api_url, data=payload)
+
+    if not result.ok:
+        app.logger.error("Reraising error %s returned by API" % result.status_code)
+        abort(result.status_code)
+
+    return result.content
 
 if __name__ == "__main__":
     app.run()
