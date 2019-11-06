@@ -22,8 +22,8 @@ POLICY={
 def validate(path, identity):
     for pathpattern, allowed in POLICY.items():
         app.logger.debug("CHECKING CONDITION: %s" % [pathpattern])
-        if re.compile(pathpattern).match(subpath):
-            app.logger.debug("CHECKING POLICY: %s" % allowed)
+        if re.compile(pathpattern).match(path):
+            app.logger.debug("PATH %s matches %s, CHECKING POLICY: %s" % (path, pathpattern, allowed))
             for identity_pattern in allowed:
                 app.logger.debug("CHECKING condition %s" % [identity_pattern])
                 if re.compile(identity_pattern).match(identity):
@@ -47,7 +47,7 @@ def fallback(subpath):
         abort(403)
 
     app.logger.debug("IDENTITY=%s" % [identity])
-    app.logger.debug("SIGNATURE=%s" % [signature_payload])
+    app.logger.debug("SIGNED_PAYLOAD=%s" % [signature_payload])
     app.logger.debug("CLAIMS=%s" % [signature_claims])
     
     if not validate(subpath, identity):
