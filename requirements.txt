@@ -1,2 +1,2 @@
 gunicorn
-git+https://github.com/hleb-rubanau/wsid-core@v0.0.21
+git+https://github.com/hleb-rubanau/wsid-core@v0.0.22
