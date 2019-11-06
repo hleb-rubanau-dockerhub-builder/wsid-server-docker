@@ -9,12 +9,29 @@ services:
           - WSID_IDENTITY=http://127.0.0.1:888/manifest
           - GUNICORN_PORT=888
         network_mode: host
-    validator: # same image but demo app -- does straight validation of posted output of /sign'
+    client: # same image but demo app -- does straight validation of posted output of /sign'
         image: wsid
         build: .
         volumes:
-          - ./demo.py:/app/app.py
+          - ./demoserver.py:/app/app.py
+          - ./demo_entrypoint.sh:/demo_entrypoint.sh
         environment:
           - LOG_LEVEL=DEBUG 
           - GUNICORN_PORT=889
+          - API_ENDPOINT=http://127.0.0.1:887/api
+          - WSID_ENDPOINT=http://127.0.0.1:888
         network_mode: host
+        entrypoint: [ "/bin/bash", "/demo_entrypoint.sh" ]
+        command: ["gunicorn", "app:app"]
+    server:
+        image: wsid
+        build: .
+        volumes: 
+          - ./demoapi.py:/app/app.py
+          - ./demo_entrypoint.sh:/demo_entrypoint.sh
+        environment:
+          - LOG_LEVEL=DEBUG 
+          - GUNICORN_PORT=887
+        network_mode: host
+        entrypoint: [ "/bin/bash", "/demo_entrypoint.sh" ]
+        command: ["gunicorn", "app:app"]
