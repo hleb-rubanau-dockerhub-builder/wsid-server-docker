@@ -1,3 +1,2 @@
 gunicorn
-flask
-git+https://github.com/hleb-rubanau/wsid-core@0ae9ff76
+git+https://github.com/hleb-rubanau/wsid-core@v0.0.5

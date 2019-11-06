@@ -1,7 +1,7 @@
 ---
 version: "3"
 services:
-    wsid:
+    wsid: # kind of private thing
         image: wsid
         build: .
         environment:
@@ -9,13 +9,12 @@ services:
           - WSID_IDENTITY=http://127.0.0.1:888/manifest
           - GUNICORN_PORT=888
         network_mode: host
-    validator:
+    validator: # same image but demo app -- does straight validation of posted output of /sign'
         image: wsid
         build: .
         volumes:
           - ./demo.py:/app/app.py
         environment:
           - LOG_LEVEL=DEBUG 
-          - WSID_IDENTITY=http://127.0.0.1:889/manifest
           - GUNICORN_PORT=889
         network_mode: host
