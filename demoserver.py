@@ -20,14 +20,15 @@ signed_requests=SignedRequests(os.getenv("WSID_ENDPOINT"))
 def index():
     return fallback('/')
 
-@app.route('/<path:subpath>')
+@app.route('/<path:subpath>', methods=["POST"])
 def fallback(subpath):
     payload=request.get_data()
     path=request.path
 
     api_url = API_ENDPOINT+path
-    app.logger("API_URL=%s" % api_url )
-
+    app.logger.debug("API_URL=%s" % api_url )
+    
+    ### DEMO: this is how we provision
     return signed_requests.process('POST', api_url, data=payload).read()
 
 if __name__ == "__main__":

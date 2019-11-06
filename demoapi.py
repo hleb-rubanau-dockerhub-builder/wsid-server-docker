@@ -4,7 +4,7 @@ import json
 from flask import Flask, request, abort
 from base64 import b64decode
 import requests 
-from wcid.validation import validate_request
+from wsid.validation import validate_request
 
 from wsid.client import WSIDClient
 
@@ -36,7 +36,7 @@ def validate(path, identity):
 def index():
     return fallback('/')
 
-@app.route('/<path:subpath>')
+@app.route('/<path:subpath>', methods=["POST"])
 def fallback(subpath):
     identity, signature_payload, signature_claims = validate_request( request )
     app.logger.debug("IDENTITY=%s" % [identity])

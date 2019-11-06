@@ -14,5 +14,5 @@ up:
 down:
 	docker-compose down -v
 
-test: up
+test: down up
 	./test.sh
