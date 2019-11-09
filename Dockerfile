@@ -13,8 +13,9 @@ RUN apt-get update && \
 
 ARG GUNICORN_PORT=888
 EXPOSE $GUNICORN_PORT
-ENV GUNICORN_PORT=$GUNICORN_PORT
-ENV GUNICORN_CMD_ARGS="--workers=3 --access-logfile - --error-logfile -" \
+ENV GUNICORN_PORT=$GUNICORN_PORT                             \
+    GUNICORN_WORKERS=2                                       \
+    GUNICORN_CMD_ARGS="--access-logfile - --error-logfile -" \
     PYTHONUNBUFFERED=1
 WORKDIR /app
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
